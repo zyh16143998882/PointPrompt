@@ -1,0 +1,74 @@
+
+# model test
+--config cfgs/finetune_modelnet_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --seed 0 --finetune_model --exp_name finetune_lomae_f20_60_nonlinear_seed0_new
+
+# scan test
+--config cfgs/finetune_scan_hardest_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed 0 --exp_name scan_prompt_lomae_f20_60_seed0_img_test;
+
+CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objbg_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed 0 --exp_name bg_prompt_lomae_f20_60_seed0
+CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_scan_objonly_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed 0 --exp_name only_prompt_lomae_f20_60_seed0
+
+CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objbg_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_raw/ckpt-last.pth --finetune_model --seed 0 --exp_name bg_prompt_raw_60_seed0_img_1
+CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_scan_objonly_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_raw/ckpt-last.pth --finetune_model --seed 0 --exp_name only_prompt_raw_60_seed0_img_1
+
+CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_modelnet_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed 0 --exp_name model_prompt_lomae_f20_60_seed0
+CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_scan_hardest_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed 0 --exp_name scan_prompt_lomae_f20_60_seed0
+
+
+# 白色modelnet40 8视图
+CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_modelnet_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --seed 0 --finetune_model --exp_name finetune_lomae_f20_60_nonlinear_seed0_new_white
+92.3420
+
+CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_modelnet_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --seed 0 --finetune_model --exp_name finetune_lomae_f20_60_nonlinear_seed0_new_color
+92.9498
+
+
+# final_model_f20_1
+
+for seed in 1 2 3 4 5 6 7 8 9
+do
+  CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_modelnet_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name modelnet_prompt_lomae_f20_60_seed${seed}
+done
+
+
+
+# final_scan_f20_1
+
+for seed in 0 1 2 3 4 5 6 7 8 9
+do
+  CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_scan_hardest_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name scan_prompt_lomae_f20_60_seed${seed}
+done
+
+80.1180
+
+# final_only_bg_f20_1
+
+for seed in 0 1 2 3 4 5 6 7 8 9
+do
+  CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objbg_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name bg_prompt_lomae_f20_60_seed${seed}
+  CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objonly_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name only_prompt_lomae_f20_60_seed${seed}
+done
+
+bg_prompt_lomae_f20_60_seed0: 85.5422
+bg_prompt_lomae_f20_60_seed1: 85.8864
+only_prompt_lomae_f20_60_seed0: 86.2306
+
+
+bg_prompt_lomae_f20_60_seed0_img_1_white: 86.7470
+
+
+
+# 不和点云的特征cat
+
+# final_scan_f20_1
+for seed in 0 1 2 3 4 5 6 7 8 9
+do
+  CUDA_VISIBLE_DEVICES=1 python main.py --config cfgs/finetune_scan_hardest_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name scan_prompt_lomae_f20_60_seed${seed}_img_4_white
+done
+
+
+for seed in 0 1 2 3 4 5 6 7 8 9
+do
+  CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objbg_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name bg_prompt_lomae_f20_60_seed${seed}_img_4_white
+  CUDA_VISIBLE_DEVICES=0 python main.py --config cfgs/finetune_scan_objonly_new.yaml --ckpts ./experiments/pretrain_lomae/cfgs/pretrain_lomae_f20_60/ckpt-last.pth --finetune_model --seed ${seed} --exp_name only_prompt_lomae_f20_60_seed${seed}_img_4_white
+done
